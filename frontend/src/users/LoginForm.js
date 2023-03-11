@@ -15,7 +15,6 @@ function LoginForm() {
 
     const [errorMessage, setErrorMessage] = useState(null)
 
-    __
 async function handleSubmit(e) {
     const response = await fetch(`http://localhost:3123/authentication/`, {
         method: 'POST',

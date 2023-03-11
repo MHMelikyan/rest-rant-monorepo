@@ -1,5 +1,4 @@
-import { createContext, useState } from "react";
-import { useState, useEffect } from 'react'
+import { createContext, useState, useEffect } from "react";
 
 export const CurrentUser = createContext()
 
@@ -16,7 +15,7 @@ function CurrentUserProvider({ children }){
             let user = await response.json()
             setCurrentUser(user)
         }
-        getLoggedInUser()
+         getLoggedInUser()
     },[])
 
     return (
