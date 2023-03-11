@@ -10,7 +10,9 @@ function CurrentUserProvider({ children }){
     useEffect(() => {
 
         const getLoggedInUser = async () => {
-            let response = await fetch('http://localhost:3123/authentication/profile')
+            let response = await fetch('http://localhost:3123/authentication/profile',
+            { credentioals:'include'
+        })
             let user = await response.json()
             setCurrentUser(user)
         }
