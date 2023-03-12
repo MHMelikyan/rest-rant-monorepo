@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState,} from "react"
 import { useHistory } from "react-router"
 
 function NewCommentForm({ place, onSubmit }) {
@@ -12,15 +12,15 @@ function NewCommentForm({ place, onSubmit }) {
         authorId: ''
     })
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`http://localhost:3123/users`)
-            const users = await response.json()
-            setComment({ ...comment, authorId: users[0]?.userId})
-            setAuthors(users)
-        }
-        fetchData()
-    }, [])
+   // useEffect(() => {
+     //   const fetchData = async () => {
+       //     const response = await fetch(`http://localhost:3123/users`)
+         //   const users = await response.json()
+           // setComment({ ...comment, authorId: users[0]?.userId})
+           // setAuthors(users)
+        //}
+        //fetchData()
+    //}, [])
 
     let authorOptions = authors.map(author => {
         return <option key={author.userId} value={author.userId}>{author.firstName} {author.lastName}</option>
