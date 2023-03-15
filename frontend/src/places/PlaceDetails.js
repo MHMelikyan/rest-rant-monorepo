@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory, useParams } from "react-router"
+import { CurrentUser } from "../contexts/CurrentUser";
 import CommentCard from './CommentCard'
 import NewCommentForm from "./NewCommentForm";
 
@@ -9,11 +10,13 @@ function PlaceDetails() {
 
 	const history = useHistory()
 
+	const { currentUser } = useContext(CurrentUser)
+
 	const [place, setPlace] = useState(null)
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const response = await fetch(`http://localhost:3123/places/${placeId}`)
+			const response = await fetch(`http://localhost:5000/places/${placeId}`)
 			const resData = await response.json()
 			setPlace(resData)
 		}
@@ -29,21 +32,15 @@ function PlaceDetails() {
 	}
 
 	async function deletePlace() {
-		await fetch(`http://localhost:3123/places/${place.placeId}`, {
+		await fetch(`http://localhost:5000/places/${place.placeId}`, {
 			method: 'DELETE'
 		})
 		history.push('/places')
 	}
 
 	async function deleteComment(deletedComment) {
-		await fetch(`http://localhost:3123/places/${place.placeId}/comments/${deletedComment.commentId}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${localStorage.getItem('token')}`
-			},
-			body: JSON.stringify(commentAttributes)
-	
+		await fetch(`http://localhost:5000/places/${place.placeId}/comments/${deletedComment.commentId}`, {
+			method: 'DELETE'
 		})
 
 		setPlace({
@@ -54,11 +51,11 @@ function PlaceDetails() {
 	}
 
 	async function createComment(commentAttributes) {
-		const response = await fetch(`http://localhost:3123/places/${place.placeId}/comments`, {
+		const response = await fetch(`http://localhost:5000/places/${place.placeId}/comments`, {
 			method: 'POST',
 			headers: {
-				'Authorization': `Bearer ${localStorage.getItem('token')}`,
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${localStorage.getItem('token')}`
 			},
 			body: JSON.stringify(commentAttributes)
 		})
@@ -74,6 +71,8 @@ function PlaceDetails() {
 		})
 
 	}
+
+
 
 	let comments = (
 		<h3 className="inactive">
@@ -101,13 +100,11 @@ function PlaceDetails() {
 		)
 		comments = place.comments.map(comment => {
 			return (
-				<CommentCard 
-				key={comment.commentId} 
-				comment={comment} 
-				onDelete={() => deleteComment(comment)} />
+				<CommentCard key={comment.commentId} comment={comment} onDelete={() => deleteComment(comment)} />
 			)
 		})
 	}
+
 	let placeActions = null
 
 	if (currentUser?.role === 'admin') {
@@ -115,14 +112,14 @@ function PlaceDetails() {
 			<>
 				<a className="btn btn-warning" onClick={editPlace}>
 					Edit
-				</a>
+				</a>{` `}
 				<button type="submit" className="btn btn-danger" onClick={deletePlace}>
 					Delete
 				</button>
 			</>
 		)
 	}
-	
+
 
 	return (
 		<main>
@@ -149,6 +146,7 @@ function PlaceDetails() {
 					<h4>
 						Serving {place.cuisines}.
 					</h4>
+					<br />
 					{placeActions}
 				</div>
 			</div>
